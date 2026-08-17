@@ -39,9 +39,7 @@ const orderItemSchema = new mongoose.Schema(
       default: "🍽️",
     },
   },
-  {
-    _id: false,
-  }
+  { _id: false }
 );
 
 // =====================================================
@@ -51,6 +49,17 @@ const orderItemSchema = new mongoose.Schema(
 const orderSchema = new mongoose.Schema(
   {
     // =================================================
+    // USER ID
+    // =================================================
+
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
+
+    // =================================================
     // ORDER ID
     // =================================================
 
@@ -58,18 +67,7 @@ const orderSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      trim: true,
-    },
-
-    // =================================================
-    // USER ID
-    // =================================================
-
-    userId: {
-      type: String,
-      required: false,
-      default: null,
-      trim: true,
+      index: true,
     },
 
     // =================================================
@@ -114,24 +112,17 @@ const orderSchema = new mongoose.Schema(
 
     items: {
       type: [orderItemSchema],
-
       required: true,
-
       validate: {
         validator: function (items) {
-          return (
-            Array.isArray(items) &&
-            items.length > 0
-          );
+          return items.length > 0;
         },
-
-        message:
-          "Order must contain at least one item",
+        message: "Order must contain at least one item",
       },
     },
 
     // =================================================
-    // PRICE DETAILS
+    // PRICE
     // =================================================
 
     subtotal: {
@@ -164,42 +155,26 @@ const orderSchema = new mongoose.Schema(
 
     payment: {
       type: String,
-
-      enum: [
-        "COD",
-        "ONLINE",
-      ],
-
+      enum: ["COD", "ONLINE"],
       default: "COD",
     },
-
-    // =================================================
-    // RAZORPAY PAYMENT ID
-    // =================================================
 
     paymentId: {
       type: String,
       default: null,
-      trim: true,
     },
-
-    // =================================================
-    // RAZORPAY ORDER ID
-    // =================================================
 
     razorpayOrderId: {
       type: String,
       default: null,
-      trim: true,
     },
 
     // =================================================
-    // ORDER STATUS
+    // STATUS
     // =================================================
 
     status: {
       type: String,
-
       enum: [
         "PLACED",
         "PREPARING",
@@ -207,49 +182,31 @@ const orderSchema = new mongoose.Schema(
         "DELIVERED",
         "CANCELLED",
       ],
-
       default: "PLACED",
     },
 
     // =================================================
-    // CANCELLATION REASON
+    // CANCELLATION
     // =================================================
 
     cancellationReason: {
       type: String,
       default: null,
-      trim: true,
     },
-
-    // =================================================
-    // CANCELLATION MESSAGE
-    // =================================================
 
     cancellationMessage: {
       type: String,
       default: null,
-      trim: true,
     },
   },
+
   {
     timestamps: true,
   }
 );
 
 // =====================================================
-// INDEX
+// EXPORT
 // =====================================================
 
-orderSchema.index({
-  userId: 1,
-  status: 1,
-});
-
-// =====================================================
-// EXPORT MODEL
-// =====================================================
-
-module.exports = mongoose.model(
-  "Order",
-  orderSchema
-);
+module.exports = mongoose.model("Order", orderSchema);

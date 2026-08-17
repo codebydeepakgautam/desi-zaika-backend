@@ -1,4 +1,3 @@
-
 const dns = require("dns");
 
 // =====================================================
@@ -30,6 +29,7 @@ const paymentRoutes = require("./routes/paymentRoutes");
 const contactRoutes = require("./routes/contactRoutes");
 const authRoutes = require("./routes/authRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
+const shopRoutes = require("./routes/shopRoutes");
 
 // =====================================================
 // APP
@@ -152,6 +152,14 @@ app.use("/api/reviews", reviewRoutes);
 console.log("✅ Review routes loaded");
 
 // =====================================================
+// SHOP ROUTES
+// =====================================================
+
+app.use("/api/shop", shopRoutes);
+
+console.log("✅ Shop routes loaded");
+
+// =====================================================
 // AUTH TEST
 // =====================================================
 
@@ -235,6 +243,16 @@ mongoose
         "Review API:",
         `http://localhost:${PORT}/api/reviews`
       );
+
+      console.log(
+        "Shop API:",
+        `http://localhost:${PORT}/api/shop`
+      );
+
+      console.log(
+        "Shop Toggle API:",
+        `http://localhost:${PORT}/api/shop/toggle`
+      );
     });
   })
 
@@ -244,4 +262,3 @@ mongoose
       error.message
     );
   });
-
